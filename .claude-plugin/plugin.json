@@ -1,0 +1,9 @@
+{
+  "name": "zotero-librarian",
+  "description": "Import PDFs and papers into Zotero with metadata verified against the file itself, and keep the library organised on a flat collections-for-context, tags-for-topic model.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Davide Fiocchi",
+    "email": "davidefiocchi2@gmail.com"
+  }
+}
