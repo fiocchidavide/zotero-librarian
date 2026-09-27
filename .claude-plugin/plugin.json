@@ -5,5 +5,17 @@
   "author": {
     "name": "Davide Fiocchi",
     "email": "davidefiocchi2@gmail.com"
-  }
+  },
+  "homepage": "https://github.com/fiocchidavide/zotero-librarian",
+  "repository": "https://github.com/fiocchidavide/zotero-librarian",
+  "license": "MIT",
+  "keywords": [
+    "zotero",
+    "bibliography",
+    "metadata",
+    "pdf",
+    "research",
+    "reference-management",
+    "mcp"
+  ]
 }

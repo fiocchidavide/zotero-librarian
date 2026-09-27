@@ -1,0 +1,21 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "zotero-librarian",
+  "description": "Single-plugin marketplace for zotero-librarian.",
+  "owner": {
+    "name": "Davide Fiocchi",
+    "email": "davidefiocchi2@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "zotero-librarian",
+      "description": "Import PDFs and papers into Zotero with metadata verified against the file itself, and keep the library organised on a flat collections-for-context, tags-for-topic model.",
+      "author": {
+        "name": "Davide Fiocchi"
+      },
+      "source": "./",
+      "category": "productivity",
+      "homepage": "https://github.com/fiocchidavide/zotero-librarian"
+    }
+  ]
+}

@@ -22,14 +22,16 @@ no catalogue listed.
 
 ## Install
 
-Add as a user-level plugin, then enable it:
+In Claude Code, add this repository as a plugin marketplace and install from it:
 
-```bash
-git clone git@github.com:fiocchidavide/zotero-librarian.git ~/.claude/skills/zotero-librarian
+```
+/plugin marketplace add fiocchidavide/zotero-librarian
+/plugin install zotero-librarian@zotero-librarian
 ```
 
-Check `/plugin` that `zotero-librarian` is enabled and `/mcp` that the `zotero` server is
-connected.
+Then check `/plugin` that `zotero-librarian` is enabled, and `/mcp` that the `zotero`
+server is connected. The MCP server is declared by the plugin — there is nothing to wire
+up by hand.
 
 ## Requirements
 
@@ -37,10 +39,17 @@ connected.
   communicate with Zotero" enabled. Writes need a one-time in-app authorization, which the
   skill will prompt for.
 - **`mutool`** (from MuPDF) on PATH — the only PDF tool needed. No OCR toolchain is
-  required; pages are rendered and read directly.
+  required; pages are rendered and read directly. `brew install mupdf-tools`, or
+  `apt install mupdf-tools`.
+- **[`uv`](https://docs.astral.sh/uv/)** on PATH. The bundled MCP server runs via `uvx`,
+  and the modules in `lib/` are run with `uv run`. Nothing needs installing by hand.
 - **A Google Books API key** in `GB_KEY`. Unauthenticated, Google Books returns HTTP 429
-  on every request and is useless; with a key it is the single best metadata source.
-  Put it in `.env` (gitignored) or your shell profile — never in the repo.
+  on every request and is useless; with a key it is the single best metadata source, so
+  ISBN imports are much weaker without one. Export it from your shell profile — never
+  commit it.
+
+Python is stdlib-only: `lib/` has no third-party dependencies, so there is nothing to
+install beyond the above.
 
 ## Layout
 
@@ -76,4 +85,4 @@ lib/                          tested code — don't reimplement
 
 ## License
 
-Personal tooling; no warranty.
+MIT — see [LICENSE](LICENSE).

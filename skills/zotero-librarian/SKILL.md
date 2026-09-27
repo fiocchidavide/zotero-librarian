@@ -46,6 +46,18 @@ Zotero desktop must be running. The MCP server talks to it locally
 
 If the server doesn't appear, check `/plugin` (is this plugin enabled?) and `/mcp`.
 
+**Where `lib/` is.** Every `lib/*.py` named below lives at `${CLAUDE_PLUGIN_ROOT}/lib`,
+which is set for you. It is stdlib-only — import it by putting that directory on the
+path, and run it with `uv`:
+
+```bash
+uv run --no-project python -c "
+import sys; sys.path.insert(0, '$CLAUDE_PLUGIN_ROOT/lib')
+import sources, resolve
+print(sources.gb('9780262048644'))
+"
+```
+
 ## Ground rules
 
 - **Content is truth; the filename is a hint; the cover is an unsourced claim.**
@@ -199,4 +211,4 @@ self-published material doesn't have.
   vocabulary, saved searches, item types and field conventions.
 - [references/mcp-notes.md](references/mcp-notes.md) — the real tool inventory, what
   doesn't exist, and the API traps.
-- `lib/` — tested code. Don't reimplement it.
+- `${CLAUDE_PLUGIN_ROOT}/lib/` — tested code. Don't reimplement it.

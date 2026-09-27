@@ -16,11 +16,17 @@ the model's call after reading the front matter, with the PDF as final authority
 
 ## Running
 
+Stdlib only — no dependencies to install.
+
 ```bash
 export GB_KEY=<google books api key>     # never commit this
-export SCR=<a working dir>               # cache lands here
-python3 -c "import sources; print(sources.gb('9780262048644'))"
+
+cd "$CLAUDE_PLUGIN_ROOT/lib"             # or this directory, when working in the repo
+uv run --no-project python -c "import sources; print(sources.gb('9780262048644'))"
 ```
+
+Responses are cached on disk under `~/.cache/zotero-librarian/cache`, so re-running a
+batch costs nothing. Set `SCR` to put the cache somewhere else.
 
 `LoC` is included for completeness but is **dominated** — 21% coverage, nothing unique.
 Don't wire it into new pipelines.
