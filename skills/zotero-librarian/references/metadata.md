@@ -175,6 +175,9 @@ No rule suffices; decide these by reading:
 | is this the edition it claims | retypes, drafts, "penultimate versions" |
 | is the abstract worth keeping | some are marketing copy that doesn't belong in a record |
 | is a duplicate really a duplicate | one work in two artifacts → one item, two attachments |
+| which versions to keep | several versions of one work (arXiv + yearly course editions) are **one item**; the user keeps only the **newest** PDF attached, and Extra says which version it is. Metadata stays on the citable edition of record (e.g. the arXiv entry) |
+| which duplicate survives | the copy with the better record (type, dates, authors), whichever is older; it inherits the other's collections |
+| is this filename bad | only **third-party aggregator residue** is bad: site names (Anna's Archive, z-lib, libgen, Docsity) and the hashes/upload IDs those sites add. Anything the authors or publisher served stays, however terse or opaque — `lezioniNew.pdf`, `2019-953.pdf` (ePrint id), `ssrn_id….pdf`, even a hash that is the publisher's own CDN name. Judge provenance, not looks |
 
 ## 6. Operational notes
 

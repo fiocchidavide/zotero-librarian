@@ -12,7 +12,7 @@ Courses/
   ETH/<course name>
   EPFL/<course name>
   MIT/<course name>
-  UniTO/<course name>
+  Unibo/<course name>
 Projects/<project name>     a thesis, a paper being written, a reading group
 Archive/                    superseded editions, things you're done with
 ```
@@ -20,6 +20,35 @@ Archive/                    superseded editions, things you're done with
 That is the whole tree. **Items live at the library root with no collection.** An item
 joins a collection only when a course or project actually uses it — and it can join
 several, because collections are membership, not location.
+
+### Course collections
+
+- **A course collection needs material by the course's own teacher.** Create
+  `Courses/<inst>/<course>` only when the library holds at least one item written by
+  whoever teaches that course: their lecture notes, handouts, formula sheet. Identify the
+  teacher from the course slides' title page or the PDF's Author metadata. Third-party
+  items found in the course folder (vendor manuals, cheat sheets, papers, books) may
+  *join* an existing course collection but never justify creating one; without teacher
+  material they stay at the library root. (Two ISA manuals do not make an "Architettura
+  degli elaboratori" collection.)
+- **Name it after the course as the user's folders name it**, in the course's own
+  language (Italian for Unibo, English for ETH/EPFL), with obvious typos fixed.
+- **A course subcollection replaces the bare institution collection.** An item filed under
+  `Courses/ETH/<course>` does not also sit in `Courses/ETH`. The bare institution
+  collection holds only that institution's material with no course of its own.
+- Filing an item into a course or project takes it out of `Inbox/`.
+
+## What belongs in the library
+
+In: books, manuals, standards, lecture notes and scripts (including ones still being
+written — import now, replace the attachment as they grow), papers and white papers, and
+short reference sheets.
+
+Out:
+- slide decks, exercise sheets and their solutions, past exams, lab handouts and tutorial
+  sheets — they belong to their course folders;
+- code repositories — they belong in git;
+- **unofficial student summaries** of a course, however useful.
 
 Deliberately *not* present: a topic hierarchy. Topic lives in tags, where an item can hold
 several without a filing decision and without a cross-cutting work needing an arbitrary

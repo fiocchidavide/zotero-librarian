@@ -72,6 +72,9 @@ print(sources.gb('9780262048644'))
   [references/mcp-notes.md](references/mcp-notes.md)); propose, and let the user merge in
   the Zotero UI.
 - **Stop after repeated write failures** rather than looping.
+- **Know what belongs before importing.** Slides, exercise sheets, exams, code and
+  unofficial student summaries stay out; a course collection needs material by that
+  course's own teacher. See [references/structure.md](references/structure.md).
 
 ## Import runbook
 
