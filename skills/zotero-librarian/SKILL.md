@@ -147,6 +147,65 @@ conflict → leave empty, tag `needs-review`, surface both values. Never pick si
 The judgements that are yours and cannot be delegated to a rule are listed in
 [references/metadata.md](references/metadata.md#judgements-that-are-yours).
 
+#### 5½. Outline — propose one if the PDF has none
+
+`mutool show <pdf> outline` prints nothing → the PDF has no bookmarks, and Zotero's reader
+sidebar will be empty. If the front matter has a **clear printed table of contents**,
+*propose* generating the outline; don't do it unasked, since the attached file will differ
+from the original. Do it before step 6 so the file that gets attached already has it.
+
+**The outline is a true representation of the printed Contents.** Hand-curated, not
+script output, and faithful:
+
+- **Titles verbatim.** The author's wording, casing, punctuation and even typos stay
+  ("Podosky", a trailing period). Don't normalise case, dashes or spelling. Fix only
+  *extraction* damage (`Schr¨odinger` → `Schrödinger`, lost spaces, ligatures), checked
+  against the rendered page.
+- **Only what the Contents lists.** No unnumbered sections, and no appendix subsections,
+  even when the body typesets them as headings. The one addition is the front and back
+  matter the Contents omits (Contents, Preface/Foreword, Acknowledgments, the appendices
+  themselves, References, Index): top-level entries titled exactly as the heading on
+  that page.
+- **The craft goes into the mechanics.** Each bookmark lands on its heading, not the
+  page top, since mid-page sections are common. Page labels match the printed numbering,
+  so Zotero shows and cites p. 19, not PDF page 25. Set the PDF's title and author
+  metadata, and collapse the outline to chapters.
+
+Steps:
+
+1. **Transcribe the Contents page into a spec**: `level<TAB>page<TAB>title` per line,
+   with the page number as printed. Read it from `mutool draw -F txt`, and render the
+   page to confirm accents, quotes and numbering. Use `=N` (absolute PDF page) for the
+   front/back matter entries. Find those with `uv run lib/outline.py headings <pdf>`,
+   which lists every bold line with its page, y and size.
+2. **Check**: `uv run lib/outline.py check <pdf> toc.tsv`. It finds the printed→PDF
+   offset by voting across every entry (`--offset N` overrides it), then compares each
+   title with the heading typeset on its target page: `ok`, `~` (shows what the page
+   says), `text` (no heading found, so the bookmark falls back to page top) or `MISS`.
+   Look at every non-`ok` line. A `~` where the body heading differs from the Contents
+   keeps the **Contents** wording. Fix transcription errors in the spec. `--force` only
+   after looking at each `MISS` page.
+3. **Write a copy**, never over the original:
+   `uv run lib/outline.py write <pdf> toc.tsv <scratch>/<Author> - <Title>.pdf
+   --labels 1:r,<first arabic page>:D --title "<title>" --author "<author>"`.
+   Work out the label ranges from the printed folios (roman front matter, where arabic 1
+   falls, any restart). The script refuses an existing outline without `--replace` and
+   checks the entry count on read-back.
+4. **Check the result by eye**: `uv run lib/outline.py verify <out.pdf> <scratch>/sheet.png`,
+   then Read the PNG. It shows one strip per bookmark, cut from where the bookmark lands,
+   labelled with the title and page label. Every strip must open on its heading. The
+   labels' curly quotes render as `·`, which is a font limitation of the sheet only.
+   For one entry, confirm the raw destination independently
+   (`mutool show -b <pdf> trailer/Root/Outlines/First/...`): `/XYZ` y is measured from
+   the page bottom.
+5. Attach that copy in step 6, and record in `extra`: `PDF outline added at import from
+   the printed Contents, titles verbatim (original had none); page labels <ranges> set to
+   match the printed numbering`.
+
+Already imported? Replace the file inside the existing attachment
+(`~/Zotero/storage/<attachment key>/`), after checking its MD5 is still the file you
+attached. That keeps the attachment key and the user's annotations.
+
 #### 6. Write
 
 ```

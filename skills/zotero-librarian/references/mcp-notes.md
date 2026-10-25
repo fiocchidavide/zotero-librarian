@@ -115,6 +115,12 @@ concluding a field isn't supported.
 `zotero-mcp-server[semantic]` is installed. Zotero's own full-text index builds
 automatically in the app and is unaffected.
 
+### `zotero_get_pdf_outline` is an optional extra too
+
+It fails with an install hint unless `zotero-mcp-server[pdf]` (PyMuPDF) is installed. To
+check whether a PDF has an outline, use `mutool show <pdf> outline` instead; empty output
+means none. Rebuilding one is `lib/outline.py` (SKILL.md, step 5½).
+
 ## Direct SQLite reading
 
 For inventory, reconciliation and schema questions, read the database directly (with the

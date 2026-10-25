@@ -50,11 +50,14 @@ Computer science
   machine-learning  nlp  ai  data-science  quantum-computing
   software-engineering  programming  signal-processing
 
+Physics
+  quantum-physics
+
 Other
   history-of-computing  cognitive-science  languages
 ```
 
-45 terms in live use. Eight of them (`discrete-mathematics`, `functional-analysis`,
+46 terms in live use. Eight of them (`discrete-mathematics`, `functional-analysis`,
 `computational-geometry`, `quantum-computing`, `concurrency`, `databases`,
 `signal-processing`, `electronics`) were added while cataloguing lecture notes and
 hardware material — a book-derived vocabulary under-serves course material, so expect to
