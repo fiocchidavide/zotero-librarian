@@ -18,6 +18,8 @@ front matter in roman and back matter the printed TOC leaves out.
     uv run outline.py write <pdf> <spec> <out.pdf> [--offset N] [--labels 1:r,7:D]
                             [--title T] [--author A] [--force] [--replace]
     uv run outline.py verify <pdf> <sheet.png>       read back + contact sheet of every target
+    uv run outline.py folios <pdf>                   page labels vs the printed page numbers
+    uv run outline.py labels <pdf> <out.pdf> --labels 2:r,16:D   fix labels only
 
 check prints, per entry, how the page's own heading compares with the spec title:
 `ok` same words, `~` similar (the page text is shown: decide whether your title or
@@ -143,6 +145,36 @@ def write(pdf,spec,out,offset=None,force=False,replace=False,labels=None,title=N
     print(f"wrote {out}: {n} outline entries")
     if n!=len(entries): sys.exit(f"expected {len(entries)} entries, read back {n}")
 
+def folio(page):
+    """The page number typeset on the page: a bare arabic or roman number as the
+    first or last line (footer or running head). None when there isn't one."""
+    lines=[l.strip() for l in page.get_text().splitlines() if l.strip()]
+    for l in lines[-1:]+lines[:1]:
+        if re.fullmatch(r"\d+|[ivxlc]+",l,re.I): return l.lower()
+    return None
+
+def folios(pdf):
+    """Compare every page's label with its printed folio. Pages without a folio
+    (title, blank, part openers) are skipped: count them and decide if that's right."""
+    doc=pymupdf.open(pdf); bad=[]; seen=0
+    for p in doc:
+        f=folio(p)
+        if f is None: continue
+        seen+=1
+        if f!=(p.get_label() or "").lower(): bad.append((p.number+1,f,p.get_label() or "none"))
+    for n,f,l in bad[:20]: print(f"pdf p{n:<4} printed {f:<6} label {l}")
+    if len(bad)>20: print(f"… {len(bad)-20} more")
+    print(f"{seen}/{len(doc)} pages carry a folio; {len(bad)} disagree with their label")
+    return not bad
+
+def relabel(pdf,out,labels):
+    """Set page labels only, for a PDF whose outline is fine but whose labels aren't."""
+    doc=pymupdf.open(pdf)
+    doc.set_page_labels(parse_labels(labels))
+    doc.save(out,garbage=1,deflate=True)
+    print(f"wrote {out}")
+    folios(out)
+
 def verify(pdf,sheet,band=70,width=420):
     """Read the outline back from the written file and render, for every entry,
     the strip of page each bookmark lands on. Look at the sheet: the heading
@@ -177,4 +209,6 @@ if __name__=="__main__":
     elif a[:1]==["check"] and len(a)==3: report(*check(pymupdf.open(a[1]),parse_spec(a[2]),off))
     elif a[:1]==["write"] and len(a)==4: write(a[1],parse_spec(a[2]),a[3],off,force,replace,labels,title,author)
     elif a[:1]==["verify"] and len(a)==3: verify(a[1],a[2])
+    elif a[:1]==["folios"] and len(a)==2: sys.exit(0 if folios(a[1]) else 1)
+    elif a[:1]==["labels"] and len(a)==3 and labels: relabel(a[1],a[2],labels)
     else: sys.exit(__doc__)

@@ -150,12 +150,24 @@ conflict → leave empty, tag `needs-review`, surface both values. Never pick si
 The judgements that are yours and cannot be delegated to a rule are listed in
 [references/metadata.md](references/metadata.md#judgements-that-are-yours).
 
-#### 5½. Outline — propose one if the PDF has none
+#### 5½. Outline and page numbering — always check both, propose fixes
 
-`mutool show <pdf> outline` prints nothing → the PDF has no bookmarks, and Zotero's reader
-sidebar will be empty. If the front matter has a **clear printed table of contents**,
-*propose* generating the outline; don't do it unasked, since the attached file will differ
-from the original. Do it before step 6 so the file that gets attached already has it.
+**Run both checks on every PDF**, at import and whenever you open an item's PDF for other
+work. Report the result even when nothing is wrong:
+
+1. **Outline.** Does the PDF have bookmarks (`mutool show <pdf> outline`; empty output
+   means none) and does the front matter have a printed table of contents? A **clear
+   printed Contents but no outline** means Zotero's reader sidebar is empty when it
+   needn't be. *Propose* generating the outline.
+2. **Page numbering.** `uv run lib/outline.py folios <pdf>` compares every page's label
+   with the number typeset on it. Any disagreement, including a PDF with no labels at
+   all, means Zotero shows and cites PDF page 34 for printed p. 19. *Propose* fixing the
+   labels. This check stands on its own: a PDF can have a good outline and wrong labels.
+   For labels only, `uv run lib/outline.py labels <pdf> <out.pdf> --labels <ranges>`
+   writes a copy and re-runs the check on it.
+
+Don't fix either one unasked, since the attached file will then differ from the original.
+At import, do it before step 6 so the file that gets attached already has the fix.
 
 **The outline is a true representation of the printed Contents.** Hand-curated, not
 script output, and faithful:
@@ -186,14 +198,18 @@ Steps:
    title with the heading typeset on its target page: `ok`, `~` (shows what the page
    says), `text` (no heading found, so the bookmark falls back to page top) or `MISS`.
    Look at every non-`ok` line. A `~` where the body heading differs from the Contents
-   keeps the **Contents** wording. Fix transcription errors in the spec. `--force` only
-   after looking at each `MISS` page.
+   keeps the **Contents** wording. Fix transcription errors in the spec. A `MISS` can
+   also be the printed Contents itself being wrong (Goodfellow's lists the Index one page
+   early): point that entry at the real page with `=N`, keep its title, and note it in
+   `extra`. `--force` only after looking at each `MISS` page.
 3. **Write a copy**, never over the original:
    `uv run lib/outline.py write <pdf> toc.tsv <scratch>/<Author> - <Title>.pdf
    --labels 1:r,<first arabic page>:D --title "<title>" --author "<author>"`.
    Work out the label ranges from the printed folios (roman front matter, where arabic 1
-   falls, any restart). The script refuses an existing outline without `--replace` and
-   checks the entry count on read-back.
+   falls, any restart). Roman i often starts on PDF page 2 because the title page has no
+   number, so `1:r` is a guess to check, not a default. The script refuses an existing
+   outline without `--replace` and checks the entry count on read-back. Then run
+   `folios` on the copy; it must report 0 disagreements.
 4. **Check the result by eye**: `uv run lib/outline.py verify <out.pdf> <scratch>/sheet.png`,
    then Read the PNG. It shows one strip per bookmark, cut from where the bookmark lands,
    labelled with the title and page label. Every strip must open on its heading. The
@@ -203,7 +219,7 @@ Steps:
    the page bottom.
 5. Attach that copy in step 6, and record in `extra`: `PDF outline added at import from
    the printed Contents, titles verbatim (original had none); page labels <ranges> set to
-   match the printed numbering`.
+   match the printed numbering`. For a labels-only fix, record just the second half.
 
 Already imported? Replace the file inside the existing attachment
 (`~/Zotero/storage/<attachment key>/`), after checking its MD5 is still the file you
@@ -246,6 +262,10 @@ No runbook. Use `zotero_search_items`, `zotero_advanced_search`, `zotero_search_
 `zotero_get_collections` / `zotero_get_collection_items`, `zotero_get_tags`, and
 `zotero_semantic_search` if keyword search comes up empty. Quote what the source actually
 says; don't paraphrase from the title.
+
+Whenever you open an item's PDF, also run the outline and page-numbering checks from
+[step 5½](#5-outline-and-page-numbering--always-check-both-propose-fixes) and propose
+any fix they call for.
 
 ## Organising
 
