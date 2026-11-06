@@ -263,6 +263,31 @@ No runbook. Use `zotero_search_items`, `zotero_advanced_search`, `zotero_search_
 `zotero_semantic_search` if keyword search comes up empty. Quote what the source actually
 says; don't paraphrase from the title.
 
+**Pick the attachment before you read.** Given a parent key, the PDF tools open its
+*first* attachment, which for lecture notes re-uploaded every few weeks is the oldest
+version. When an item has more than one file attachment, resolve which one to read and
+pass that **attachment key** explicitly. The default is the one the user marked in
+Weavero, which stores the choice as the tag `▶️ wv-defatt` on the attachment.
+`zotero_get_item_children` doesn't show attachment tags, so read them from the database
+(read-only, safe while Zotero runs):
+
+```bash
+sqlite3 "file:$HOME/Zotero/zotero.sqlite?immutable=1" "
+SELECT a.key, a.dateAdded, ia.path,
+       EXISTS(SELECT 1 FROM itemTags it JOIN tags t USING(tagID)
+              WHERE it.itemID = a.itemID AND t.name = '▶️ wv-defatt') AS wv_default
+FROM items p JOIN itemAttachments ia ON ia.parentItemID = p.itemID
+JOIN items a ON a.itemID = ia.itemID
+WHERE p.key = '<parent key>' AND a.itemID NOT IN (SELECT itemID FROM deletedItems)
+ORDER BY a.dateAdded;"
+```
+
+- One attachment has `wv_default = 1` → read that one.
+- None does and there are several → **ask the user which to open**, listing them with
+  their dates. Don't fall back to the first or guess the newest.
+
+Say which version you read when you quote from it.
+
 Whenever you open an item's PDF, also run the outline and page-numbering checks from
 [step 5½](#5-outline-and-page-numbering--always-check-both-propose-fixes) and propose
 any fix they call for.
